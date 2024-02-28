@@ -49,7 +49,7 @@ struct PowerSupply {
     capacity: u32,
 }
 
-struct PC {
+pub struct PC {
     pub processor: Processor,
     pub motherboard: Motherboard,
     pub graphic_card: GraphicCard,

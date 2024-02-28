@@ -3,6 +3,7 @@ mod creational;
 use crate::creational::factory::{Cargo, deliver_cargo};
 use crate::creational::abstract_factory::{WindowsUIManager, AppUIManager};
 use creational::builder::{PCBuilder, Processor};
+use creational::singleton::exec;
 
 fn main() {
     // Factory method calls
@@ -25,4 +26,8 @@ fn main() {
     let mut pc_builder = PCBuilder::new_builder();
     let processor = Processor{ socket: "AM5".to_string(), series: "7700X".to_string(), cores: 8, threads: 16, tdp: 105 };
     pc_builder.buy_processor(processor);
+    let _result = pc_builder.build_pc(); // evaluate here 
+
+    // Singleton pattern
+    exec("INSERT INTO users (name, age) VALUES ('John Doe', 123)".to_string());
 }
