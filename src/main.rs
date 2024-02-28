@@ -2,6 +2,7 @@ mod creational;
 
 use crate::creational::factory::{Cargo, deliver_cargo};
 use crate::creational::abstract_factory::{WindowsUIManager, AppUIManager};
+use creational::builder::{PCBuilder, Processor};
 
 fn main() {
     // Factory method calls
@@ -13,10 +14,15 @@ fn main() {
 
     deliver_cargo(cargos);
 
-    // Abstract factory calls
+    // Abstract factory pattern
     let ui_manager = AppUIManager{ os_manager: Box::new(WindowsUIManager{}) };
     let button = ui_manager.create_button();
     button.click();
     let input = ui_manager.create_input();
     input.on_input("Hello World!".to_string());
+
+    // Builder pattern
+    let mut pc_builder = PCBuilder::new_builder();
+    let processor = Processor{ socket: "AM5".to_string(), series: "7700X".to_string(), cores: 8, threads: 16, tdp: 105 };
+    pc_builder.buy_processor(processor);
 }
