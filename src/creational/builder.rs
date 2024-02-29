@@ -19,7 +19,8 @@ pub struct Processor {
 }
 
 #[derive(Clone)]
-struct Motherboard {
+#[allow(dead_code)]
+pub struct Motherboard {
     socket: String,
     memory_type: String,
     storage_type: Vec<String>,
@@ -27,28 +28,33 @@ struct Motherboard {
 }
 
 #[derive(Clone)]
-struct GraphicCard {
+#[allow(dead_code)]
+pub struct GraphicCard {
     socket: String,
     memory: u32,
     tdp: u16,
 }
 
 #[derive(Clone)]
-struct Memory {
+#[allow(dead_code)]
+pub struct Memory {
     socket: String,
     capacity: u32,
 }
 
 #[derive(Clone)]
-struct Storage {
+#[allow(dead_code)]
+pub struct Storage {
     socket: String,
 }
 
 #[derive(Clone)]
-struct PowerSupply {
+#[allow(dead_code)]
+pub struct PowerSupply {
     capacity: u32,
 }
 
+#[allow(dead_code)]
 pub struct PC {
     pub processor: Processor,
     pub motherboard: Motherboard,
@@ -67,6 +73,7 @@ pub struct PCBuilder {
     power_supply: Option<PowerSupply>,
 }
 
+#[allow(dead_code)]
 impl PCBuilder {
     pub fn new_builder() -> PCBuilder {
         PCBuilder { processor: None, motherboard: None, graphic_card: None, memory: None, storage: None, power_supply: None }

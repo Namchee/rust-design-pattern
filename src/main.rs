@@ -5,7 +5,9 @@ use crate::creational::factory::{Cargo, deliver_cargo};
 use crate::creational::abstract_factory::{WindowsUIManager, AppUIManager};
 use creational::builder::{PCBuilder, Processor};
 use creational::singleton::exec;
+
 use structural::adapter::{EuropeanSocket, LaptopCharger, PowerConverter};
+use structural::bridge::{NextGenerationRemoteControl, RemoteControl, TV};
 
 fn main() {
     /* Creational Patterns */
@@ -42,4 +44,12 @@ fn main() {
     let socket = EuropeanSocket{};
     let adapter = PowerConverter{ charger: laptop_charger };
     socket.plug_in(Box::new(adapter));
+
+    // Bridge
+    let rc = RemoteControl{};
+    let tv = TV{ status: false, volume: 0 };
+    rc.turn_device_on(Box::new(tv));
+    rc.increment_volume(Box::new(tv));
+    let fancy_rc = NextGenerationRemoteControl{ rc: rc };
+    fancy_rc.mute(Box::new(tv));
 }
