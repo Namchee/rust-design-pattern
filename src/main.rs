@@ -1,11 +1,15 @@
 mod creational;
+mod structural;
 
 use crate::creational::factory::{Cargo, deliver_cargo};
 use crate::creational::abstract_factory::{WindowsUIManager, AppUIManager};
 use creational::builder::{PCBuilder, Processor};
 use creational::singleton::exec;
+use structural::adapter::{EuropeanSocket, LaptopCharger, PowerConverter};
 
 fn main() {
+    /* Creational Patterns */
+
     // Factory method calls
     let cargos = vec![
         Cargo{ weight: 123, destination: "Somewhere, Sumatra, Indonesia".to_string() },
@@ -30,4 +34,12 @@ fn main() {
 
     // Singleton pattern
     exec("INSERT INTO users (name, age) VALUES ('John Doe', 123)".to_string());
+
+    /* Structural Patterns */
+    
+    // Adapter pattern
+    let laptop_charger = LaptopCharger{ rating: 320 };
+    let socket = EuropeanSocket{};
+    let adapter = PowerConverter{ charger: laptop_charger };
+    socket.plug_in(Box::new(adapter));
 }
