@@ -1,6 +1,10 @@
-// Composite is a design pattern that groups smaller objects into
-// one big object. The main purpose of using this pattern is enforcing
-// hierarchy or applying 
+// Composite is a design pattern that groups smaller objects (leaves) into
+// one big object (composite). The main purpose of using this pattern is enforcing
+// hierarchy or working with all the components at the same time.
+//
+// In this example, we have a Button and Input component as leaves and
+// Dialog component as a composite object. When we move the Dialog component,
+// all of the component needs to be translated too.
 
 pub trait Component {
     fn translate(&mut self, x: u32, y: u32);
