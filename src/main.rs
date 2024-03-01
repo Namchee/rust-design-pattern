@@ -52,4 +52,5 @@ fn main() {
     rc.increment_volume(Box::new(tv));
     let fancy_rc = NextGenerationRemoteControl{ rc: rc };
     fancy_rc.mute(Box::new(tv));
+    fancy_rc.turn_device_on(Box::new(tv));
 }

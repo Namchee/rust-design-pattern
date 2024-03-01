@@ -76,23 +76,14 @@ pub struct NextGenerationRemoteControl {
 
 #[allow(dead_code)]
 impl NextGenerationRemoteControl {
-    pub fn turn_device_on(&self, device: Box<dyn Device>) {
-        self.rc.turn_device_on(device);
-    }
-
-    pub fn turn_device_off(&self, device: Box<dyn Device>) {
-        self.rc.turn_device_off(device);
-    }
-
-    pub fn increment_volume(&self, device: Box<dyn Device>) {
-        self.rc.increment_volume(device);
-    }
-
-    pub fn decrement_volume(&self, device: Box<dyn Device>) {
-        self.rc.decrement_volume(device);
-    }
-
     pub fn mute(&self, mut device: Box<dyn Device>) {
         device.set_volume(0);
+    }
+}
+
+impl std::ops::Deref for NextGenerationRemoteControl {
+    type Target = RemoteControl;
+    fn deref(&self) -> &Self::Target {
+        &self.rc
     }
 }
