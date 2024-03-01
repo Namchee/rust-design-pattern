@@ -4,6 +4,7 @@ mod structural;
 use crate::creational::factory::{Cargo, deliver_cargo};
 use crate::creational::abstract_factory::{WindowsUIManager, AppUIManager};
 use crate::structural::decorator::{Cache, UserRepository};
+use crate::structural::facade::{self, CheckoutFacade, DeliveryService, InventoryManagement, Order, PaymentGateway, ShoppingCart, User};
 use creational::builder::{PCBuilder, Processor};
 use creational::singleton::exec;
 
@@ -74,4 +75,23 @@ fn main() {
     let cached = UserRepositoryWithCache{ repo: Box::new(original_repo), cache };
 
     println!("{}", cached.find_user("John Doe".to_string()).unwrap().name);
+
+    // Facade, instead of directly calling these services, just call the facade!
+    let cart = ShoppingCart{};
+    let delivery = DeliveryService{};
+    let inventory = InventoryManagement{};
+    let payment = PaymentGateway{};
+    let facade = CheckoutFacade{ cart, delivery, inventory, payment_gateway: payment };
+
+    let user = User{
+        id: 12,
+        name: "John Doe".to_string(),
+    };
+    let order = Order{
+        number: "THIS-IS-UUID".to_string(),
+        items: vec![],
+        status: facade::OrderStatus::IN_PROCESS,
+        payment_method: "STEAM_WALLET".to_string(),
+    };
+    let _ = facade.checkout(user, order);
 }
