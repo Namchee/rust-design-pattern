@@ -8,6 +8,7 @@ use creational::singleton::exec;
 
 use structural::adapter::{EuropeanSocket, LaptopCharger, PowerConverter};
 use structural::bridge::{NextGenerationRemoteControl, RemoteControl, TV};
+use structural::composite::{Button, Component, Dialog, Input};
 
 fn main() {
     /* Creational Patterns */
@@ -53,4 +54,13 @@ fn main() {
     let fancy_rc = NextGenerationRemoteControl{ rc: rc };
     fancy_rc.mute(Box::new(tv));
     fancy_rc.turn_device_on(Box::new(tv));
+
+    // Composite
+    let button = Button{ x: 1, y: 2 };
+    let input = Input{ x: 2, y: 4, value: "".to_string() };
+    let mut dialog = Dialog::new();
+    dialog.add_component(Box::new(button));
+    dialog.add_component(Box::new(input));
+
+    dialog.translate(10, 20);
 }
