@@ -3,12 +3,14 @@ mod structural;
 
 use crate::creational::factory::{Cargo, deliver_cargo};
 use crate::creational::abstract_factory::{WindowsUIManager, AppUIManager};
+use crate::structural::decorator::{Cache, UserRepository};
 use creational::builder::{PCBuilder, Processor};
 use creational::singleton::exec;
 
 use structural::adapter::{EuropeanSocket, LaptopCharger, PowerConverter};
 use structural::bridge::{NextGenerationRemoteControl, RemoteControl, TV};
 use structural::composite::{Button, Component, Dialog, Input};
+use structural::decorator::{UserPostgreRepository, UserRepositoryWithCache};
 
 fn main() {
     /* Creational Patterns */
@@ -63,4 +65,13 @@ fn main() {
     dialog.add_component(Box::new(input));
 
     dialog.translate(10, 20);
+
+    // Decorator
+    let original_repo = UserPostgreRepository{};
+    println!("{}", original_repo.find_user("John Doe".to_string()).unwrap().name);
+
+    let cache = Cache{};
+    let cached = UserRepositoryWithCache{ repo: Box::new(original_repo), cache };
+
+    println!("{}", cached.find_user("John Doe".to_string()).unwrap().name);
 }
