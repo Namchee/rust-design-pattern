@@ -5,6 +5,7 @@ use crate::creational::factory::{Cargo, deliver_cargo};
 use crate::creational::abstract_factory::{WindowsUIManager, AppUIManager};
 use crate::structural::decorator::{Cache, UserRepository};
 use crate::structural::facade::{self, CheckoutFacade, DeliveryService, InventoryManagement, Order, PaymentGateway, ShoppingCart, User};
+use crate::structural::flyweight::{Forest, TreeFactory};
 use creational::builder::{PCBuilder, Processor};
 use creational::singleton::exec;
 
@@ -94,4 +95,9 @@ fn main() {
         payment_method: "STEAM_WALLET".to_string(),
     };
     let _ = facade.checkout(user, order);
+
+    // Flyweight
+    let factory = TreeFactory::new();
+    let mut forest = Forest::new(factory);
+    forest.plant_trees(0, 123, "Maple".to_string(), (255, 0, 0, 255), "maple_texture.jpg".to_string());
 }

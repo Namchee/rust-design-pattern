@@ -8,6 +8,11 @@
 // your code. The simplest solution to fix this is to create
 // a facade CheckoutFacade that provides a method check_out
 // which seams the complexity of wiring those 4 dependencies together.
+//
+// FAQ:
+// 1. Constructing the facade is complex!
+// - You can combine facade with builder pattern, or if you're lazy, use
+// a dependency injection tool.
 
 #[allow(dead_code)]
 pub struct Item {
