@@ -1,5 +1,6 @@
 mod creational;
 mod structural;
+mod behavioral;
 
 use creational::builder::{PCBuilder, Processor};
 use creational::singleton::exec;
@@ -13,6 +14,8 @@ use creational::factory::{Cargo, deliver_cargo};
 use creational::abstract_factory::{WindowsUIManager, AppUIManager};
 use structural::decorator::{UserPostgreRepository, UserRepository, UserRepositoryWithLogger};
 use structural::proxy::{Cache, UserRepositoryWithCache};
+
+use crate::behavioral::chain_of_resposibility::{AccountHandler, CallCenter, Handler, TransactionHandler};
 
 fn main() {
     /* Creational Patterns */
@@ -105,4 +108,16 @@ fn main() {
     let mut cached = UserRepositoryWithCache{ repo: original_repo.clone(), cache  };
 
     println!("{}", cached.find_user("John Doe".to_string()).unwrap().name);
+
+    /* Behavioral Patterns */
+
+    // Chain of Responsibility
+    let mut call_center = CallCenter::new();
+    let account_handler = AccountHandler::new();
+    let transaction_handler = TransactionHandler{};
+
+    call_center.register_handler("1".to_string(), Box::new(account_handler));
+    call_center.register_handler("2".to_string(), Box::new(transaction_handler));
+
+    call_center.handle("123".to_string());
 }
