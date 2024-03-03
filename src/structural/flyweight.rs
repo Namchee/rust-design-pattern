@@ -8,7 +8,7 @@
 
 type Color = (u8, u8, u8, u8);
 
-trait Canvas {
+pub trait Canvas {
     fn draw(&self, x: u64, y: u64);
 }
 
@@ -45,11 +45,13 @@ impl TreeFactory {
     }
 }
 
+#[allow(dead_code)]
 struct Tree {
     x: u64,
     y: u64,
     tree_type: TreeType,
 }
+#[allow(dead_code)]
 impl Tree {
     pub fn draw(&self, canvas: &Box<dyn Canvas>) {
         self.tree_type.draw(canvas, self.x, self.y);
@@ -57,9 +59,10 @@ impl Tree {
 }
 
 pub struct Forest {
-    pub trees: Vec<Tree>,
+    trees: Vec<Tree>,
     pub tree_factory: TreeFactory,
 }
+#[allow(dead_code)]
 impl Forest {
     pub fn new(factory: TreeFactory) -> Forest {
         Forest{

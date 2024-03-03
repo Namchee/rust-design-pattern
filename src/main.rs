@@ -1,18 +1,19 @@
 mod creational;
 mod structural;
 
-use crate::creational::factory::{Cargo, deliver_cargo};
-use crate::creational::abstract_factory::{WindowsUIManager, AppUIManager};
-use crate::structural::decorator::{Cache, UserRepository};
-use crate::structural::facade::{self, CheckoutFacade, DeliveryService, InventoryManagement, Order, PaymentGateway, ShoppingCart, User};
-use crate::structural::flyweight::{Forest, TreeFactory};
+
 use creational::builder::{PCBuilder, Processor};
 use creational::singleton::exec;
 
 use structural::adapter::{EuropeanSocket, LaptopCharger, PowerConverter};
 use structural::bridge::{NextGenerationRemoteControl, RemoteControl, TV};
 use structural::composite::{Button, Component, Dialog, Input};
-use structural::decorator::{UserPostgreRepository, UserRepositoryWithCache};
+use crate::structural::facade::{self, CheckoutFacade, DeliveryService, InventoryManagement, Order, PaymentGateway, ShoppingCart, User};
+use crate::structural::flyweight::{Forest, TreeFactory};
+use crate::creational::factory::{Cargo, deliver_cargo};
+use crate::creational::abstract_factory::{WindowsUIManager, AppUIManager};
+use crate::structural::decorator::{UserPostgreRepository, UserRepository, UserRepositoryWithLogger};
+use crate::structural::proxy::{Cache, UserRepositoryWithCache};
 
 fn main() {
     /* Creational Patterns */
@@ -69,13 +70,12 @@ fn main() {
     dialog.translate(10, 20);
 
     // Decorator
-    let original_repo = UserPostgreRepository{};
+    let mut original_repo = Box::new(UserPostgreRepository{});
     println!("{}", original_repo.find_user("John Doe".to_string()).unwrap().name);
 
-    let cache = Cache{};
-    let cached = UserRepositoryWithCache{ repo: Box::new(original_repo), cache };
+    let mut benchmarked_repo = UserRepositoryWithLogger{ repo: original_repo.clone() };
 
-    println!("{}", cached.find_user("John Doe".to_string()).unwrap().name);
+    println!("{}", benchmarked_repo.find_user("John Doe".to_string()).unwrap().name);
 
     // Facade, instead of directly calling these services, just call the facade!
     let cart = ShoppingCart{};
@@ -100,4 +100,10 @@ fn main() {
     let factory = TreeFactory::new();
     let mut forest = Forest::new(factory);
     forest.plant_trees(0, 123, "Maple".to_string(), (255, 0, 0, 255), "maple_texture.jpg".to_string());
+
+    // Proxy
+    let cache = Cache::new();
+    let mut cached = UserRepositoryWithCache{ repo: original_repo.clone(), cache  };
+
+    println!("{}", cached.find_user("John Doe".to_string()).unwrap().name);
 }

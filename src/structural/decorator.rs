@@ -3,57 +3,47 @@
 //
 // In this example, we have a data repository that fetches data from db. Currently,
 // the app is running well on production. After a few months, you realized
-// that the app is a bit slow, so you want to add caching. However, the code 
-// for repository is so complex to the point it's hard to make changes.
-// Since the usecase depends on an interface, you decided to use decorator
-// to wrap the repository to include caching logic
+// that the app is a bit slow, so you want to determine the actual query time
+// since you're not sure if your query is slow or the bottleneck is somewhere else.
+// As this is a benchmark code that won't live long, you don't want to modify the original methods.
+// A decorator that benchmarks the method can used to achieve this.
 
+use std::time::Instant;
+use serde::{Deserialize, Serialize};
+
+#[derive(Serialize, Deserialize)]
 pub struct User {
     pub name: String,
     pub age: u16,
 }
 pub trait UserRepository {
-    fn find_user(&self, name: String) -> Option<User>;
+    fn find_user(&mut self, name: String) -> Option<User>;
 }
 
+#[derive(Clone)]
 pub struct UserPostgreRepository {}
 impl UserRepository for UserPostgreRepository {
-    fn find_user(&self, _: String) -> Option<User> {
+    fn find_user(&mut self, _: String) -> Option<User> {
         // imagine if we query the db
         Some(User { name: "John Doe".to_string(), age: 37 })
     }
 }
 
-pub struct Cache {}
-impl Cache {
-    pub fn get(&self, _: String) -> Option<String> {
-        Some("{ \"name\": \"John Doe\", \"age\": 38 }".to_string())
-    }
-
-    pub fn set(&self, _: String, _: String) {
-        // set to cache
-    }
-}
-
 #[allow(dead_code)]
-pub struct UserRepositoryWithCache {
-    pub cache: Cache,
+pub struct UserRepositoryWithLogger {
     pub repo: Box<dyn UserRepository>,
 }
 
-impl UserRepository for UserRepositoryWithCache {
-    fn find_user(&self, name: String) -> Option<User> {
-        let key = format!("user:{}", name);
-        let from_cache = self.cache.get(key.to_string());
+impl UserRepository for UserRepositoryWithLogger {
+    fn find_user(&mut self, name: String) -> Option<User> {
+        println!("Querying DB for user {}", name);
 
-        // return from cache
-        if from_cache.is_some() {
-            return Some(User { name: "John Doe".to_string(), age: 38 });
-        }
+        let start = Instant::now();
 
-        let from_db = User { name: "John Doe".to_string(), age: 37 };
-        self.cache.set(key.to_string(), "{ \"name\": \"John Doe\", \"age\": 37 }".to_string());
+        let result = self.repo.find_user(name.clone());
 
-        return Some(from_db);
+        println!("Finish querying DB for user {} in {}s", name, start.elapsed().as_secs());
+
+        result
     }
 }
