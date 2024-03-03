@@ -1,19 +1,18 @@
 mod creational;
 mod structural;
 
-
 use creational::builder::{PCBuilder, Processor};
 use creational::singleton::exec;
 
 use structural::adapter::{EuropeanSocket, LaptopCharger, PowerConverter};
 use structural::bridge::{NextGenerationRemoteControl, RemoteControl, TV};
 use structural::composite::{Button, Component, Dialog, Input};
-use crate::structural::facade::{self, CheckoutFacade, DeliveryService, InventoryManagement, Order, PaymentGateway, ShoppingCart, User};
-use crate::structural::flyweight::{Forest, TreeFactory};
-use crate::creational::factory::{Cargo, deliver_cargo};
-use crate::creational::abstract_factory::{WindowsUIManager, AppUIManager};
-use crate::structural::decorator::{UserPostgreRepository, UserRepository, UserRepositoryWithLogger};
-use crate::structural::proxy::{Cache, UserRepositoryWithCache};
+use structural::facade::{CheckoutFacade, DeliveryService, InventoryManagement, Order, PaymentGateway, ShoppingCart, User, OrderStatus};
+use structural::flyweight::{Forest, TreeFactory};
+use creational::factory::{Cargo, deliver_cargo};
+use creational::abstract_factory::{WindowsUIManager, AppUIManager};
+use structural::decorator::{UserPostgreRepository, UserRepository, UserRepositoryWithLogger};
+use structural::proxy::{Cache, UserRepositoryWithCache};
 
 fn main() {
     /* Creational Patterns */
@@ -91,7 +90,7 @@ fn main() {
     let order = Order{
         number: "THIS-IS-UUID".to_string(),
         items: vec![],
-        status: facade::OrderStatus::IN_PROCESS,
+        status: OrderStatus::IN_PROCESS,
         payment_method: "STEAM_WALLET".to_string(),
     };
     let _ = facade.checkout(user, order);
