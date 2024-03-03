@@ -1,4 +1,4 @@
-// Chain of Responsibility is a design pattern
+// Command is a design pattern
 // that allows you to pass requests along a chain of handlers
 // instead of calling them one by one
 //
@@ -13,8 +13,14 @@
 
 use std::collections::HashMap;
 
+pub struct Input {
+    pub command: String,
+    pub client: String,
+    pub user: String,
+}
+
 pub trait Handler {
-    fn handle(&self, command: String);
+    fn handle(&self, input: Input);
 }
 
 pub struct CallCenter {
@@ -28,14 +34,16 @@ impl CallCenter {
         self.handler_map.insert(id, handler);
     }
 }
-impl Handler for CallCenter {
-    fn handle(&self, command: String) {
+impl CallCenter {
+    fn handle(&self, ussd: String) {
         println!("Thank you for calling our call center!");
 
-        let cmd = command.get(0..1).unwrap().to_string();
+        let user = "John Doe".to_string();
+        let client = "Discord".to_string();
+        let cmd = ussd.get(0..1).unwrap().to_string();
 
         if let Some(handler) = self.handler_map.get(&cmd) {
-            handler.handle(command[1..].to_string());
+            handler.handle(Input{ command: ussd[1..].to_string(), client, user });
 
             return;
         }
@@ -44,35 +52,16 @@ impl Handler for CallCenter {
     }
 }
 
-pub struct AccountHandler{
-    handler_map: HashMap<String, Box<dyn Handler> >,
-}
-#[allow(dead_code)]
-impl AccountHandler {
-    pub fn new() -> CallCenter {
-        CallCenter { handler_map: HashMap::new() }
-    }
-    pub fn register_handler(&mut self, id: String, handler: Box<dyn Handler>) {
-        self.handler_map.insert(id, handler);
-    }
-}
+pub struct AccountHandler{}
 impl Handler for AccountHandler {
-    fn handle(&self, command: String) {
+    fn handle(&self, _: Input) {
         println!("Hiya, I'm account handler! Happy to assist you with any problems in your account!");
-
-        let cmd = command.get(0..1).unwrap().to_string();
-
-        if let Some(handler) = self.handler_map.get(&cmd) {
-            handler.handle(command[1..].to_string());
-
-            return;
-        }
     }
 }
 
 pub struct TransactionHandler{}
 impl Handler for TransactionHandler {
-    fn handle(&self, _: String) {
+    fn handle(&self, _: Input) {
         println!("Hola! I'm transaction handler. Ready to assist you with any problems regarding transactions.")
     }
 }
