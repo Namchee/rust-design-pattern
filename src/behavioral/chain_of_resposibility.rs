@@ -2,77 +2,79 @@
 // that allows you to pass requests along a chain of handlers
 // instead of calling them one by one
 //
-// In this example, we have a call center for a e-commerce platform
-// that have multiple menus. When buidling a small app, it does make
-// sense to unify the handlers in one single struct. However,
-// this reduces the maintainability of the handler. To resolve this,
-// we can apply the chain of responsibility pattern by defining a trait
-// for handlers to follow. User's request will be handled by central
-// call center which will then forwarded to handle chains based on
-// its command.
+// In this example, we have a factory that produces shirts.
+// After a shirt is sewn, it goes through the QA process,
+// packaging process, and finally delivery to warehouse
 
-use std::collections::HashMap;
-
-pub trait Handler {
-    fn handle(&self, command: String);
+struct Shirt {
+    pub color: (u8, u8, u8),
+    pub size: String,
 }
 
-pub struct CallCenter {
-    handler_map: HashMap<String, Box<dyn Handler> >,
+pub trait ManufacturingLine {
+    fn set_next(&mut self, handler: Box<dyn ManufacturingLine>);
+    fn handle(&self, shirt: Shirt);
 }
-impl CallCenter {
-    pub fn new() -> CallCenter {
-        CallCenter { handler_map: HashMap::new() }
-    }
-    pub fn register_handler(&mut self, id: String, handler: Box<dyn Handler>) {
-        self.handler_map.insert(id, handler);
+
+pub struct QAProcess{
+    next: Option<Box<dyn ManufacturingLine> >, 
+}
+impl QAProcess {
+    pub fn new() -> QAProcess {
+        QAProcess { next: None }
     }
 }
-impl Handler for CallCenter {
-    fn handle(&self, command: String) {
-        println!("Thank you for calling our call center!");
-
-        let cmd = command.get(0..1).unwrap().to_string();
-
-        if let Some(handler) = self.handler_map.get(&cmd) {
-            handler.handle(command[1..].to_string());
-
-            return;
-        }
-
-        println!("I'm sorry, but I don't know what that is");
+impl ManufacturingLine for QAProcess {
+    fn set_next(&mut self, handler: Box<dyn ManufacturingLine>) {
+        self.next = Some(handler);
     }
-}
+    fn handle(&self, shirt: Shirt) {
+        println!("Checking shirt quality");
 
-pub struct AccountHandler{
-    handler_map: HashMap<String, Box<dyn Handler> >,
-}
-#[allow(dead_code)]
-impl AccountHandler {
-    pub fn new() -> CallCenter {
-        CallCenter { handler_map: HashMap::new() }
-    }
-    pub fn register_handler(&mut self, id: String, handler: Box<dyn Handler>) {
-        self.handler_map.insert(id, handler);
-    }
-}
-impl Handler for AccountHandler {
-    fn handle(&self, command: String) {
-        println!("Hiya, I'm account handler! Happy to assist you with any problems in your account!");
-
-        let cmd = command.get(0..1).unwrap().to_string();
-
-        if let Some(handler) = self.handler_map.get(&cmd) {
-            handler.handle(command[1..].to_string());
-
-            return;
+        if self.next.is_some() {
+            self.next.unwrap().handle(shirt);
         }
     }
 }
 
-pub struct TransactionHandler{}
-impl Handler for TransactionHandler {
-    fn handle(&self, _: String) {
-        println!("Hola! I'm transaction handler. Ready to assist you with any problems regarding transactions.")
+pub struct PackagingProcess{
+    next: Option<Box<dyn ManufacturingLine> >, 
+}
+impl PackagingProcess {
+    pub fn new() -> PackagingProcess {
+        PackagingProcess { next: None }
+    }
+}
+impl ManufacturingLine for PackagingProcess {
+    fn set_next(&mut self, handler: Box<dyn ManufacturingLine>) {
+        self.next = Some(handler);
+    }
+    fn handle(&self, shirt: Shirt) {
+        println!("Packaging shirt nicely...");
+
+        if self.next.is_some() {
+            self.next.unwrap().handle(shirt);
+        }
+    }
+}
+
+pub struct DeliveryProcess{
+    next: Option<Box<dyn ManufacturingLine> >, 
+}
+impl DeliveryProcess {
+    pub fn new() -> DeliveryProcess {
+        DeliveryProcess { next: None }
+    }
+}
+impl ManufacturingLine for DeliveryProcess {
+    fn set_next(&mut self, handler: Box<dyn ManufacturingLine>) {
+        self.next = Some(handler);
+    }
+    fn handle(&self, shirt: Shirt) {
+        println!("Delivering packaged shirt to warehouse...");
+
+        if self.next.is_some() {
+            self.next.unwrap().handle(shirt);
+        }
     }
 }

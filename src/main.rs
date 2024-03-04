@@ -15,7 +15,7 @@ use creational::abstract_factory::{WindowsUIManager, AppUIManager};
 use structural::decorator::{UserPostgreRepository, UserRepository, UserRepositoryWithLogger};
 use structural::proxy::{Cache, UserRepositoryWithCache};
 
-use crate::behavioral::chain_of_resposibility::{AccountHandler, CallCenter, Handler, TransactionHandler};
+use crate::behavioral::chain_of_resposibility::{AccountHandler, CallCenter, ManufactureLine, TransactionHandler};
 
 fn main() {
     /* Creational Patterns */
