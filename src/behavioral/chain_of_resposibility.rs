@@ -6,7 +6,7 @@
 // After a shirt is sewn, it goes through the QA process,
 // packaging process, and finally delivery to warehouse
 
-struct Shirt {
+pub struct Shirt {
     pub color: (u8, u8, u8),
     pub size: String,
 }
@@ -32,7 +32,7 @@ impl ManufacturingLine for QAProcess {
         println!("Checking shirt quality");
 
         if self.next.is_some() {
-            self.next.unwrap().handle(shirt);
+            self.next.as_ref().unwrap().handle(shirt);
         }
     }
 }
@@ -53,7 +53,7 @@ impl ManufacturingLine for PackagingProcess {
         println!("Packaging shirt nicely...");
 
         if self.next.is_some() {
-            self.next.unwrap().handle(shirt);
+            self.next.as_ref().unwrap().handle(shirt);
         }
     }
 }
@@ -74,7 +74,7 @@ impl ManufacturingLine for DeliveryProcess {
         println!("Delivering packaged shirt to warehouse...");
 
         if self.next.is_some() {
-            self.next.unwrap().handle(shirt);
+            self.next.as_ref().unwrap().handle(shirt);
         }
     }
 }

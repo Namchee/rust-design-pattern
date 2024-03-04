@@ -15,7 +15,8 @@ use creational::abstract_factory::{WindowsUIManager, AppUIManager};
 use structural::decorator::{UserPostgreRepository, UserRepository, UserRepositoryWithLogger};
 use structural::proxy::{Cache, UserRepositoryWithCache};
 
-use crate::behavioral::chain_of_resposibility::{AccountHandler, CallCenter, ManufactureLine, TransactionHandler};
+use behavioral::chain_of_resposibility::{DeliveryProcess, ManufacturingLine, PackagingProcess, QAProcess, Shirt};
+use behavioral::command::{AccountHandler, CallCenter, TransactionHandler};
 
 fn main() {
     /* Creational Patterns */
@@ -111,9 +112,18 @@ fn main() {
 
     /* Behavioral Patterns */
 
-    // Chain of Responsibility
+    // Chain of responsibility
+    let mut qa_process = QAProcess::new();
+    let mut packaging = PackagingProcess::new();
+    let delivery = DeliveryProcess::new();
+    packaging.set_next(Box::new(delivery));
+    qa_process.set_next(Box::new(packaging));
+
+    qa_process.handle(Shirt { color: (255, 255, 255), size: "XL".to_string() });
+
+    // Command
     let mut call_center = CallCenter::new();
-    let account_handler = AccountHandler::new();
+    let account_handler = AccountHandler{};
     let transaction_handler = TransactionHandler{};
 
     call_center.register_handler("1".to_string(), Box::new(account_handler));

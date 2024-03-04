@@ -35,7 +35,7 @@ impl CallCenter {
     }
 }
 impl CallCenter {
-    fn handle(&self, ussd: String) {
+    pub fn handle(&self, ussd: String) {
         println!("Thank you for calling our call center!");
 
         let user = "John Doe".to_string();
