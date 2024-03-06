@@ -12,45 +12,47 @@
 
 use uuid::Uuid;
 
-pub struct Forum<'a> {
-    pub anons: Vec<&'a Anon<'a>>,
+pub struct Forum {
+    pub anons: Vec<Anon>,
 }
-impl Forum<'_> {
-    pub fn new() -> Forum<'static> {
+impl Forum {
+    pub fn new() -> Forum {
         Forum { anons: vec![] }
     }
 
     pub fn add_user(&mut self, anon: &Anon) {
-        self.anons.push(anon);
+        self.anons.push(*anon);
     } 
 
-    pub fn broadcast(&self, source: String, msg: String) {
+    pub fn broadcast(&self, source: &Anon, msg: String) {
         for anon in self.anons.iter() {
-            if anon.id != source {
+            if anon.id != source.id {
                 anon.receive_msg(msg.clone());
             }
         }
     }
 }
 
-pub struct Anon<'a> {
+pub struct Anon {
     pub id: String,
     pub display: String,
 
-    pub forum: Option<&'a Forum<'a>>,
+    pub forum: Option<Forum>,
 }
-impl Anon<'_> {
-    pub fn new(display: String) -> Anon<'static> {
+impl Anon {
+    pub fn new(display: String) -> Anon {
         Anon { id: Uuid::new_v4().to_string(), display, forum: None }
     }
 
     pub fn join_forum(&mut self, forum: &mut Forum) {
-        forum.add_user(self);
+        (*forum).add_user(self);
+
+        self.forum = Some(*forum);
     }
 
     pub fn send_message(&self, msg: String) {
         if self.forum.is_some() {
-            self.forum.as_ref().unwrap().broadcast(self.id.clone(), msg);
+            self.forum.as_ref().unwrap().broadcast(self, msg);
         }
     }
 
