@@ -2,6 +2,8 @@ mod creational;
 mod structural;
 mod behavioral;
 
+use std::cell::RefCell;
+
 use creational::builder::{PCBuilder, Processor};
 use creational::singleton::exec;
 
@@ -17,6 +19,8 @@ use structural::proxy::{Cache, UserRepositoryWithCache};
 
 use behavioral::chain_of_resposibility::{DeliveryProcess, ManufacturingLine, PackagingProcess, QAProcess, Shirt};
 use behavioral::command::{AccountHandler, CallCenter, TransactionHandler};
+
+use crate::behavioral::mediator::{Anon, Forum};
 
 fn main() {
     /* Creational Patterns */
@@ -130,4 +134,14 @@ fn main() {
     call_center.register_handler("2".to_string(), Box::new(transaction_handler));
 
     call_center.handle("123".to_string());
+
+    // Mediator
+    let mut forum = Forum::new();
+    let mut andy = Anon::new("xXx_Darkness_xXx".to_string());
+    let mut tom = Anon::new("Tom4321".to_string());
+
+    andy.join_forum(&mut forum);
+    tom.join_forum(&mut forum);
+
+    andy.send_message("Hello World!".to_string());
 }
