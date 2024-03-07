@@ -19,6 +19,7 @@ use behavioral::chain_of_resposibility::{DeliveryProcess, ManufacturingLine, Pac
 use behavioral::command::{AccountHandler, CallCenter, TransactionHandler};
 
 use crate::behavioral::mediator::{Anon, Forum};
+use crate::behavioral::memento::{Editor, Snapshot, SnapshotManager};
 
 fn main() {
     /* Creational Patterns */
@@ -140,4 +141,20 @@ fn main() {
 
     andy.send_message("Hello World!".to_string(), &forum);
     tom.send_message("Hello Darkness!".to_string(), &forum);
+
+    // Memento
+    let mut editor = Editor::new();
+    let mut manager = SnapshotManager::new();
+    editor.set_text("Hello World!".to_string());
+    let new_state = editor.save_state();
+    let state_name = new_state.name.clone();
+    manager.save_snapshot(new_state);
+
+    // let's just say that this is too vulgar and we want to reset it
+    editor.set_text("Goodbye cruel world!".to_string());
+
+    let target_snapshot = manager.get_snapshot(state_name);
+    if target_snapshot.is_some() {
+        target_snapshot.unwrap().restore(&mut editor);
+    }
 }
