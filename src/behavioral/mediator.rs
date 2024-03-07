@@ -13,21 +13,17 @@
 use uuid::Uuid;
 
 pub struct Forum {
-    pub anons: Vec<Anon>,
+    anons: Vec<Anon>,
 }
 impl Forum {
     pub fn new() -> Forum {
         Forum { anons: vec![] }
     }
 
-    pub fn add_user(&mut self, anon: &Anon) {
-        self.anons.push(*anon);
-    } 
-
-    pub fn broadcast(&self, source: &Anon, msg: String) {
+    pub fn broadcast(&self, source: &str, msg: &str) {
         for anon in self.anons.iter() {
-            if anon.id != source.id {
-                anon.receive_msg(msg.clone());
+            if anon.id != source {
+                anon.receive_msg(msg, source);
             }
         }
     }
@@ -36,27 +32,17 @@ impl Forum {
 pub struct Anon {
     pub id: String,
     pub display: String,
-
-    pub forum: Option<Forum>,
 }
 impl Anon {
     pub fn new(display: String) -> Anon {
-        Anon { id: Uuid::new_v4().to_string(), display, forum: None }
+        Anon { id: Uuid::new_v4().to_string(), display }
     }
 
-    pub fn join_forum(&mut self, forum: &mut Forum) {
-        (*forum).add_user(self);
-
-        self.forum = Some(*forum);
+    pub fn send_message(&self, msg: String, forum: &Forum) {
+        forum.broadcast(&self.id, msg.as_str());
     }
 
-    pub fn send_message(&self, msg: String) {
-        if self.forum.is_some() {
-            self.forum.as_ref().unwrap().broadcast(self, msg);
-        }
-    }
-
-    pub fn receive_msg(&self, msg: String) {
-        println!("Received {} from anon!", msg);
+    pub fn receive_msg(&self, msg: &str, src: &str) {
+        println!("Received {} from {}!", msg, src);
     }
 }

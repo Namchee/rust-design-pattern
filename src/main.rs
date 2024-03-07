@@ -2,8 +2,6 @@ mod creational;
 mod structural;
 mod behavioral;
 
-use std::cell::RefCell;
-
 use creational::builder::{PCBuilder, Processor};
 use creational::singleton::exec;
 
@@ -136,12 +134,10 @@ fn main() {
     call_center.handle("123".to_string());
 
     // Mediator
-    let mut forum = Forum::new();
-    let mut andy = Anon::new("xXx_Darkness_xXx".to_string());
-    let mut tom = Anon::new("Tom4321".to_string());
+    let forum = Forum::new();
+    let andy = Anon::new("xXx_Darkness_xXx".to_string());
+    let tom = Anon::new("Tom4321".to_string());
 
-    andy.join_forum(&mut forum);
-    tom.join_forum(&mut forum);
-
-    andy.send_message("Hello World!".to_string());
+    andy.send_message("Hello World!".to_string(), &forum);
+    tom.send_message("Hello Darkness!".to_string(), &forum);
 }
