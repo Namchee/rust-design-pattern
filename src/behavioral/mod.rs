@@ -4,3 +4,4 @@ pub mod iterator;
 pub mod mediator;
 pub mod memento;
 pub mod strategy;
+pub mod state;

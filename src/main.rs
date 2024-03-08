@@ -20,6 +20,7 @@ use behavioral::command::{AccountHandler, CallCenter, TransactionHandler};
 
 use crate::behavioral::mediator::{Anon, Forum};
 use crate::behavioral::memento::{Editor, Snapshot, SnapshotManager};
+use crate::behavioral::state::{MusicPlayer, Player, PlayingState, Song, State, StoppedState};
 
 fn main() {
     /* Creational Patterns */
@@ -157,4 +158,16 @@ fn main() {
     if target_snapshot.is_some() {
         target_snapshot.unwrap().restore(&mut editor);
     }
+    
+    // State pattern
+    let mut player = Player::new();
+    let pop = Song::new("Beat It!", 30_000);
+    let jazz = Song::new("The Blues", 999_000);
+    let rock = Song::new("Stairway to Heaven", 5_000);
+
+    player.add_song(pop);
+    player.add_song(jazz);
+    player.add_song(rock);
+
+    let mut state = StoppedState;
 }
