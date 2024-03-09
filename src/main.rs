@@ -20,7 +20,7 @@ use behavioral::command::{AccountHandler, CallCenter, TransactionHandler};
 
 use crate::behavioral::mediator::{Anon, Forum};
 use crate::behavioral::memento::{Editor, Snapshot, SnapshotManager};
-use crate::behavioral::state::{MusicPlayer, Player, PlayingState, Song, State, StoppedState};
+use crate::behavioral::state::{MusicPlayer, Player, Song};
 
 fn main() {
     /* Creational Patterns */

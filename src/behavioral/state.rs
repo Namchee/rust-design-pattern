@@ -1,7 +1,9 @@
 // State is a design pattern that changes object behavior when
 // its internal changed. It's closely related to finite-state machine (FSM)
 //
-// In this example, we have a music player 
+// In this example, we have a music player that have 3 states: Playing, Stopped,
+// and Paused. Change in those states may affect how the music player behaves, such
+// as changing tracks, rewinding, and state transitions.
 
 pub trait State {
     fn play(&self, player: &mut Player) -> Box<dyn State>;
