@@ -169,5 +169,6 @@ fn main() {
     player.add_song(jazz);
     player.add_song(rock);
 
-    let mut state = StoppedState;
+    let mut music_player = MusicPlayer::new(player);
+    music_player.play();
 }

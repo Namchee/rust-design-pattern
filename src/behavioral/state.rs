@@ -24,10 +24,10 @@ impl dyn State {
 pub struct PlayingState;
 impl State for PlayingState {
     fn play(&self, _: &mut Player) -> Box<dyn State> {
-        self
+        Box::new(PlayingState)
     }
 
-    fn stop(self: Box<Self>, player: &mut Player) -> Box<dyn State> {
+    fn stop(&self, player: &mut Player) -> Box<dyn State> {
         player.pause();
         player.rewind();
 
@@ -36,25 +36,25 @@ impl State for PlayingState {
 }
 pub struct StoppedState;
 impl State for StoppedState {
-    fn play(self: Box<Self>, player: &mut Player) -> Box<dyn State> {
+    fn play(&self, player: &mut Player) -> Box<dyn State> {
         player.play();
 
         Box::new(PlayingState)
     }
 
-    fn stop(self: Box<Self>, _: &mut Player) -> Box<dyn State> {
-        self
+    fn stop(&self, _: &mut Player) -> Box<dyn State> {
+        Box::new(StoppedState)
     }
 }
 pub struct PausedState;
 impl State for PausedState {
-    fn play(self: Box<Self>, player: &mut Player) -> Box<dyn State> {
+    fn play(&self, player: &mut Player) -> Box<dyn State> {
         player.play();
 
         Box::new(PlayingState)
     }
 
-    fn stop(self: Box<Self>, player: &mut Player) -> Box<dyn State> {
+    fn stop(&self, player: &mut Player) -> Box<dyn State> {
         player.rewind();
 
         Box::new(StoppedState)
