@@ -22,8 +22,8 @@ use behavioral::mediator::{Anon, Forum};
 use behavioral::memento::{Editor, Snapshot, SnapshotManager};
 use behavioral::state::{MusicPlayer, Player, Song};
 use behavioral::template::{parse_config, JSONConfigurationManager, YAMLConfigurationManager};
-
-use crate::behavioral::visitor::{Circle, JSONExporter, Shape, Square};
+use behavioral::strategy::{export_data, KeJSONGan, KeTOMLGan, KeYAMLGan};
+use behavioral::visitor::{Circle, JSONExporter, Shape, Square};
 
 fn main() {
     /* Creational Patterns */
@@ -145,6 +145,11 @@ fn main() {
 
     andy.send_message("Hello World!".to_string(), &forum);
     tom.send_message("Hello Darkness!".to_string(), &forum);
+
+    // Strategy
+    export_data("Hello world".to_string(), KeJSONGan);
+    export_data("Goodbye World".to_string(), KeYAMLGan);
+    export_data("haha".to_string(), KeTOMLGan);
 
     // Memento
     let mut editor = Editor::new();
