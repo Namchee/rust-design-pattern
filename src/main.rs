@@ -3,6 +3,8 @@ mod structural;
 mod behavioral;
 
 use creational::builder::{PCBuilder, Processor};
+use creational::factory::{Cargo, deliver_cargo};
+use creational::abstract_factory::{WindowsUIManager, AppUIManager};
 use creational::singleton::exec;
 
 use structural::adapter::{EuropeanSocket, LaptopCharger, PowerConverter};
@@ -10,18 +12,18 @@ use structural::bridge::{NextGenerationRemoteControl, RemoteControl, TV};
 use structural::composite::{Button, Component, Dialog, Input};
 use structural::facade::{CheckoutFacade, DeliveryService, InventoryManagement, Order, PaymentGateway, ShoppingCart, User, OrderStatus};
 use structural::flyweight::{Forest, TreeFactory};
-use creational::factory::{Cargo, deliver_cargo};
-use creational::abstract_factory::{WindowsUIManager, AppUIManager};
+
 use structural::decorator::{UserPostgreRepository, UserRepository, UserRepositoryWithLogger};
 use structural::proxy::{Cache, UserRepositoryWithCache};
 
 use behavioral::chain_of_resposibility::{DeliveryProcess, ManufacturingLine, PackagingProcess, QAProcess, Shirt};
 use behavioral::command::{AccountHandler, CallCenter, TransactionHandler};
+use behavioral::mediator::{Anon, Forum};
+use behavioral::memento::{Editor, Snapshot, SnapshotManager};
+use behavioral::state::{MusicPlayer, Player, Song};
+use behavioral::template::{parse_config, JSONConfigurationManager, YAMLConfigurationManager};
 
-use crate::behavioral::mediator::{Anon, Forum};
-use crate::behavioral::memento::{Editor, Snapshot, SnapshotManager};
-use crate::behavioral::state::{MusicPlayer, Player, Song};
-use crate::behavioral::template::{parse_config, JSONConfigurationManager, YAMLConfigurationManager};
+use crate::behavioral::visitor::{Circle, JSONExporter, Shape, Square};
 
 fn main() {
     /* Creational Patterns */
@@ -174,6 +176,14 @@ fn main() {
     music_player.play();
 
     // Template method pattern
-    let json_cfg = parse_config(None, JSONConfigurationManager);
-    let yaml_cfg = parse_config(None, YAMLConfigurationManager);
+    let _json_cfg = parse_config(None, JSONConfigurationManager);
+    let _yaml_cfg = parse_config(None, YAMLConfigurationManager);
+
+    // Visitor
+    let json_exporter = JSONExporter;
+    let circle = Circle{ radius: 1.0 };
+    let square = Square{ side: 2 };
+
+    circle.export(&json_exporter);
+    square.export(&json_exporter);
 }
