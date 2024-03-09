@@ -21,6 +21,7 @@ use behavioral::command::{AccountHandler, CallCenter, TransactionHandler};
 use crate::behavioral::mediator::{Anon, Forum};
 use crate::behavioral::memento::{Editor, Snapshot, SnapshotManager};
 use crate::behavioral::state::{MusicPlayer, Player, Song};
+use crate::behavioral::template::{parse_config, JSONConfigurationManager, YAMLConfigurationManager};
 
 fn main() {
     /* Creational Patterns */
@@ -171,4 +172,8 @@ fn main() {
 
     let mut music_player = MusicPlayer::new(player);
     music_player.play();
+
+    // Template method pattern
+    let json_cfg = parse_config(None, JSONConfigurationManager);
+    let yaml_cfg = parse_config(None, YAMLConfigurationManager);
 }
